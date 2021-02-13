@@ -1,7 +1,7 @@
 import {  Button, Grid, TextField, makeStyles, Paper, List, ListItem, ListItemText, Box } from '@material-ui/core'
 
 import SendSharpIcon from '@material-ui/icons/SendSharp';
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 
 import { useLocation } from 'react-router-dom'
 
@@ -47,7 +47,6 @@ const Messages = () => {
 
     const location = useLocation()
 
-    let lastMessage = useRef()
 
     const typeMessage= (e) => {
         setTyping(e.target.value)
@@ -79,14 +78,13 @@ const Messages = () => {
         return () => socket.off('receive-message')
     })
 
-    useEffect(() => {
-        if(lastMessage.current){
-            lastMessage.current.scrollIntoView({
-                smooth: true,
-                block: 'end'
+    const goToLastMessage = useCallback((node) => {
+        if(node){
+            node.scrollIntoView({
+                smooth: true
             })
         }
-    },[lastMessage.current])
+    },[])
 
     const classes = useStyles()
     
@@ -101,19 +99,20 @@ const Messages = () => {
                 <Grid item>
                     <Paper className={classes.messageHistory} variant='outlined' >
                         <List>
-                            { messages ? messages.map((m,i) => 
-                                (<ListItem key={i} className={`d-flex flex-column ${m.who === who ? 'align-items-start' : 'align-items-end'}`} >
+                            { messages ? messages.map((m,i) => {
+                                const lastMessage = messages.length - 1 === i 
+                                return (<ListItem key={i} className={`d-flex flex-column ${m.who === who ? 'align-items-start' : 'align-items-end'}`} >
                                     <Paper 
                                     elevation={3}
                                     className={m.who === who ? classes.fromMe : classes.fromOther}
                                     >
-                                        <ListItemText primary={m.text} ref={messages.length -1 === i ? lastMessage: ''} />
+                                        <ListItemText primary={m.text} ref={ lastMessage ? goToLastMessage : null} />
                                     </Paper>
                                     <Box >
                                         <small className='text-muted font-italic'>{'شما ' + moment().format('HH:mm').toString()}</small>
                                     </Box>
                                 </ListItem>)
-                            ): [] }
+                            }): [] }
                         </List>
                     </Paper>
                 </Grid>
