@@ -28,21 +28,21 @@ const Join = () => {
     const chatrooms = useChatroom()
     const [chosen, setChosen]= useState('')
 
-    useEffect(() => {
-        if(chosen){
-            history.push(`/chatroom/${chosen}`)
-        }
-    },[chosen])
-
     const classes = useStyles()
     
     const chatroomChoosed = (event) => {
         setChosen(event.target.value)
     }
+
+    const joinChatroom = (event) => {
+        if(chosen){
+            history.push(`/chatroom/${chosen}`)
+        }
+    }
     
     return (
         <>
-            <form noValidate className={classes.form}>
+            <form noValidate className={classes.form} onSubmit={joinChatroom}>
                         <FormControl fullWidth variant="outlined" color='secondary' className={classes.formControl}>
                         <InputLabel id="chatroom-select-label">چت روم</InputLabel>
                             <Select

@@ -1,11 +1,15 @@
 import {  Button, Grid, TextField, makeStyles, Paper, List, ListItem, ListItemText, Box } from '@material-ui/core'
 
 import SendSharpIcon from '@material-ui/icons/SendSharp';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import { useLocation } from 'react-router-dom'
 
 import { useSocket } from '../../contexts/SocketContext'
+
+import moment from 'moment'
+
+moment.locale('fa')
 
 
 const useStyles = makeStyles((theme) => ({
@@ -24,16 +28,26 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1),
         backgroundColor: theme.palette.primary.main,
         color: 'white'
+    },
+    fromOther: {
+        padding: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+        color: 'white'
     }
 }))
 
 const Messages = () => {
     const [messages, setMessages] = useState([])
+    const [who, setWho] = useState(() => {
+        return Math.floor((Math.random() * 100) + 1);
+    })
     const [typing, setTyping] = useState('')
     
     const [socket, setId] = useSocket()
 
     const location = useLocation()
+
+    let lastMessage = useRef()
 
     const typeMessage= (e) => {
         setTyping(e.target.value)
@@ -41,9 +55,11 @@ const Messages = () => {
     const newMessage = (e) => {
         e.preventDefault()
         if(typing){
-            socket.emit('send-message', typing )
+            socket.emit('send-message', {
+                who,
+                text: typing
+            })
         }
-        console.log(socket)
         setTyping('')
     }
 
@@ -54,12 +70,23 @@ const Messages = () => {
 
     useEffect(() => {
         if(!socket) return 
-        socket.on('receive-message', (text) => {
-            setMessages([...messages, text])
-            console.log(messages)
+        socket.on('receive-message', ({who, text}) => {
+            setMessages([...messages, {
+                who,
+                text
+            }])
         })
         return () => socket.off('receive-message')
     })
+
+    useEffect(() => {
+        if(lastMessage.current){
+            lastMessage.current.scrollIntoView({
+                smooth: true,
+                block: 'end'
+            })
+        }
+    },[lastMessage.current])
 
     const classes = useStyles()
     
@@ -75,15 +102,15 @@ const Messages = () => {
                     <Paper className={classes.messageHistory} variant='outlined' >
                         <List>
                             { messages ? messages.map((m,i) => 
-                                (<ListItem key={i} className='d-flex flex-column align-items-start'>
+                                (<ListItem key={i} className={`d-flex flex-column ${m.who === who ? 'align-items-start' : 'align-items-end'}`} >
                                     <Paper 
                                     elevation={3}
-                                    className={classes.fromMe}
+                                    className={m.who === who ? classes.fromMe : classes.fromOther}
                                     >
-                                        <ListItemText primary={m} />
+                                        <ListItemText primary={m.text} ref={messages.length -1 === i ? lastMessage: ''} />
                                     </Paper>
                                     <Box >
-                                        <small className='text-muted font-italic'>شما</small>
+                                        <small className='text-muted font-italic'>{'شما ' + moment().format('HH:mm').toString()}</small>
                                     </Box>
                                 </ListItem>)
                             ): [] }
