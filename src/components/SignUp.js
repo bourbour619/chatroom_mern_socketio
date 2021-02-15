@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import { SnackBar, Alert } from '@material-ui/core'
+import  Snackbar  from '@material-ui/core/Snackbar'
+import MuiAlert from '@material-ui/lab/Alert'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,6 +16,10 @@ import { useHistory, Link as RouterLink } from 'react-router-dom'
 
 import { registerUser } from '../contexts/UserContext'
 
+
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant='filled' {...props} />
+}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,23 +47,64 @@ export default function SignUp() {
   const [email, setEmail] = useState('')
   const [who, setWho] = useState('')
   const [password, setPassword] = useState('')
-  const [alert, setAlert] = useState('')
+  const [password2, setPasswod2]= useState('')
+  const [alert, setAlert] = useState({})
   const [open, setOpen] = useState(false)
-  const password2 = useRef()
+
 
   const classes = useStyles();
 
-  const sendRegister = (e) => {
+  const history = useHistory()
+
+  const closeSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+  const sendRegister = async(e) => {
     e.preventDefault()
-    if(password !== password2.current.value){
-        setAlert('رمز عبور و تکرار آن مغایرت دارد')
+    if(password !== password2){
+        setAlert({ 
+          msg: 'رمز عبور و تکرار آن مغایرت دارد',
+          type: 'error'
+        })
+        setOpen(true)
+    }else{
+      const data = {
+        username,
+        email,
+        who,
+        password
+      }
+      try{
+        const done = await registerUser(data)
+        if(!done.registered){
+          setAlert({
+            msg: 'مشکلی پیش آمده یا ورودی نامعتبر است',
+            type: 'error'
+          })
+          setOpen(true)
+        }else{
+          setAlert({
+            msg: done.data.msg,
+            type: 'success'
+          })
+          setOpen(true)
+          setTimeout(() => {
+            history.push('/dashboard')
+          },3000)
+        }
+      }
+      catch(err){
+        setAlert({
+          msg: 'مشکلی پیش آمده یا ورودی نامعتبر است',
+          type: 'error'
+        })
+        setOpen(true)
+      }
     }
-    const data = {
-      username,
-      email,
-      who,
-      password
-    }
+    
   }
 
   return (
@@ -133,7 +179,7 @@ export default function SignUp() {
                 type="password"
                 id="password2"
                 autoComplete="current-password"
-                ref = {password2}
+                onChange= {(e) => setPasswod2(e.target.value)}
                 />
               </Grid>
           </Grid>
@@ -155,9 +201,9 @@ export default function SignUp() {
           </Grid>
         </form>
       </div>
-      <Snackbar open={alert} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="success">
-            {alert}
+      <Snackbar open={open} autoHideDuration={6000} onClose={closeSnackbar}>
+          <Alert onClose={closeSnackbar} severity={alert.type}>
+            {alert.msg}
           </Alert>
       </Snackbar>
     </Container>

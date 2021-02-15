@@ -53,7 +53,7 @@ export default function SignIn() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const { user, userDisptacher } = useUser()
+  const { user, userDispatcher } = useUser()
 
   const classes = useStyles();
   
@@ -63,7 +63,7 @@ export default function SignIn() {
     event.preventDefault()
     const data = { username, password }
     const user = await loginUser(data)
-    userDisptacher({type: 'LOGIN_USER', payload: user})
+    userDispatcher({type: 'LOGIN_USER', payload: user})
   }
 
   useEffect(() => {
