@@ -1,27 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
+import { SnackBar, Alert } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-// function Copyright() {
-//   return (
-//     <Typography variant="body2" color="textSecondary" align="center">
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://material-ui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
+import { useHistory, Link as RouterLink } from 'react-router-dom'
+
+import { registerUser } from '../contexts/UserContext'
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -44,7 +37,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+  
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [who, setWho] = useState('')
+  const [password, setPassword] = useState('')
+  const [alert, setAlert] = useState('')
+  const [open, setOpen] = useState(false)
+  const password2 = useRef()
+
   const classes = useStyles();
+
+  const sendRegister = (e) => {
+    e.preventDefault()
+    if(password !== password2.current.value){
+        setAlert('رمز عبور و تکرار آن مغایرت دارد')
+    }
+    const data = {
+      username,
+      email,
+      who,
+      password
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -56,7 +71,7 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           ثبت نام
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={sendRegister}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -68,6 +83,7 @@ export default function SignUp() {
                 id="username"
                 label="نام کاربری"
                 autoFocus
+                onChange= {(e) => setUsername(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -79,6 +95,7 @@ export default function SignUp() {
                 label="آدرس ایمیل"
                 name="email"
                 autoComplete="email"
+                onChange= {(e) => setEmail(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -86,10 +103,11 @@ export default function SignUp() {
                 variant="outlined"
                 required
                 fullWidth
-                id="showName"
+                id="who"
                 label="نام مستعار"
-                name="showName"
-                autoComplete="showName"
+                name="who"
+                autoComplete="who"
+                onChange= {(e) => setWho(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -102,6 +120,7 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange= {(e) => setPassword(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -114,6 +133,7 @@ export default function SignUp() {
                 type="password"
                 id="password2"
                 autoComplete="current-password"
+                ref = {password2}
                 />
               </Grid>
           </Grid>
@@ -128,16 +148,19 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
-                آیا حساب کاربری دارید؟ وارد شوید
-              </Link>
+              <RouterLink to='/sign-in'>
+                  آیا حساب کاربری دارید؟ وارد شوید
+              </RouterLink>
             </Grid>
           </Grid>
         </form>
       </div>
-      {/* <Box mt={5}>
-        <Copyright />
-      </Box> */}
+      <Snackbar open={alert} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="success">
+            {alert}
+          </Alert>
+      </Snackbar>
     </Container>
+    
   );
 }

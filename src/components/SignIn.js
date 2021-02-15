@@ -12,24 +12,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import { useUser } from '../contexts/UserContext'
+import { useUser, loginUser } from '../contexts/UserContext'
 
-import { useHistory } from 'react-router-dom'
-import axios from 'axios'
-import { API_URL } from '../config/keys'
+import { useHistory, Link as RouterLink } from 'react-router-dom'
 
-// function Copyright() {
-//   return (
-//     <Typography variant="body2" color="textSecondary" align="center">
-//       {'Copyright © '}
-//       <Link color="inherit" href="https://material-ui.com/">
-//         Your Website
-//       </Link>{' '}
-//       {new Date().getFullYear()}
-//       {'.'}
-//     </Typography>
-//   );
-// }
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -59,22 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const loginUser = async(data) => {
-  let payload = {}
-  const res = await axios.post(`${API_URL}/auth/login`, data)
-  if(res.data.token){
-       payload = {
-          logged_in: true,
-          data : res.data
-      }
-  }else{
-      payload = {
-          logged_in: false,
-          data : res.data
-      }
-  }
-  return payload
-}
+
 
 
 export default function SignIn() {
@@ -91,8 +62,8 @@ export default function SignIn() {
   const sendLogin = async(event) => {
     event.preventDefault()
     const data = { username, password }
-    const payload = await loginUser(data)
-    userDisptacher({type: 'LOGIN_USER', payload})
+    const user = await loginUser(data)
+    userDisptacher({type: 'LOGIN_USER', payload: user})
   }
 
   useEffect(() => {
@@ -150,23 +121,20 @@ export default function SignIn() {
               >
                 ورود
               </Button>
-              <Grid container>
-                <Grid item xs>
+              <Grid container justify='space-between'>
+                <Grid item >
                   <Link href="#" variant="body2">
                     رمز عبور را فراموش کرده‌اید؟‌
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    {"حساب کاربری ندارید؟ ثبت نام کنید"}
-                  </Link>
+                  <RouterLink to='/sign-up'>
+                    "حساب کاربری ندارید؟ ثبت نام کنید"
+                  </RouterLink>
                 </Grid>
               </Grid>
             </form>
           </div>
-        {/* <Box mt={8}>
-          <Copyright />
-        </Box> */}
       </Container>
     </div>
   );
