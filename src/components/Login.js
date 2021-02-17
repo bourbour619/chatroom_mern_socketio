@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CssBaseline } from '@material-ui/core'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import { useUser, loginUser } from '../contexts/UserContext'
+import { useAuth } from '../contexts/AuthContext'
 
 import { useHistory, Link as RouterLink } from 'react-router-dom'
 
@@ -48,12 +48,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function SignIn() {
+export default function Login() {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const { user, userDispatcher } = useUser()
+  const { auth, loginUser } = useAuth()
 
   const classes = useStyles();
   
@@ -62,15 +62,8 @@ export default function SignIn() {
   const sendLogin = async(event) => {
     event.preventDefault()
     const data = { username, password }
-    const user = await loginUser(data)
-    userDispatcher({type: 'LOGIN_USER', payload: user})
+    await loginUser(data)
   }
-
-  useEffect(() => {
-      if(user.logged_in){
-        history.push('/dashboard')
-      }
-  },[user.logged_in])
 
   return (
     <div className= {classes.wrapper}>
@@ -128,7 +121,7 @@ export default function SignIn() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <RouterLink to='/sign-up'>
+                  <RouterLink to='/register'>
                     "حساب کاربری ندارید؟ ثبت نام کنید"
                   </RouterLink>
                 </Grid>

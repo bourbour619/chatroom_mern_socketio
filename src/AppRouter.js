@@ -1,45 +1,40 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Route, Redirect, useLocation } from 'react-router-dom'
 
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
+import Login from './components/Login';
+import Register from './components/Register';
 import Dashboard from './components/Dashboard'
 import  Chatroom  from './components/Chatroom';
 
-import { useUser, authUser } from './contexts/UserContext'
+import { useUser } from './contexts/UserContext'
 
 
 const AppRouter = () => {
-    const [path, setPath] = useState('')
-    const { user, userDispatcher } = useUser()
-
-    let location = useLocation()
+    const [user, setUser] = useUser()
     
-    useEffect(() => {
-        setPath(location.pathname)
-    },[location])
+    // let location = useLocation()
     
-    useEffect(async() => {
-        const auth = await authUser(user.data['token'])
-        userDispatcher({ type: 'AUTH_USER', payload: auth})    
-    },[location.pathname])
+    // // useEffect(async() => {
+    // //     const auth = await authUser()
+    // //     userDispatcher({ type: 'AUTH_USER', payload: auth})   
+    // // },[location.pathname])
 
     return (
         <>
             <Route path='/' exact>
-                { user.logged_in ?  <Redirect to='/dashboard' /> : <Redirect to='/sign-in' /> }
+                { user.auth ?  <Redirect to='/dashboard' /> : <Redirect to='/login' /> }
             </Route>
-            <Route path='/sign-in'>
-                {!user.logged_in ? <SignIn /> : <Redirect to='/dashboard' />} 
+            <Route path='/login'>
+                {!user.auth ? <Login /> : <Redirect to='/dashboard' />} 
             </Route>
-            <Route path='/sign-up'>
-                <SignUp />
+            <Route path='/register'>
+                <Register />
             </Route>
             <Route path='/dashboard'>
-                { user.logged_in ? <Dashboard /> : <Redirect to='/sign-in' /> }
+                { user.auth ? <Dashboard /> : <Redirect to='/login' /> }
             </Route>
             <Route path='/chatroom/:id'>
-                <Chatroom />
+                { user.auth ? <Chatroom /> : <Redirect to='/login' /> }
             </Route>
         </>
     )

@@ -14,7 +14,7 @@ import Container from '@material-ui/core/Container';
 
 import { useHistory, Link as RouterLink } from 'react-router-dom'
 
-import { registerUser } from '../contexts/UserContext'
+import { useUser } from '../contexts/UserContext'
 
 
 const Alert = (props) => {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function Register() {
   
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -51,6 +51,7 @@ export default function SignUp() {
   const [alert, setAlert] = useState({})
   const [open, setOpen] = useState(false)
 
+  const { registerUser } = useUser()
 
   const classes = useStyles();
 
@@ -194,7 +195,7 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <RouterLink to='/sign-in'>
+              <RouterLink to='/login'>
                   آیا حساب کاربری دارید؟ وارد شوید
               </RouterLink>
             </Grid>

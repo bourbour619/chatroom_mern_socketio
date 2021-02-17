@@ -62,10 +62,6 @@ const Profile = () => {
                 id="password2"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="مرا به خاطر بسپار"
-              />
               <Button
                 type="submit"
                 fullWidth

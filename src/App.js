@@ -5,6 +5,8 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { ChatroomProvider } from './contexts/ChatroomContext'
 import { SocketProvider } from './contexts/SocketContext'
 import { UserProvider } from './contexts/UserContext'
+import { AuthProvider } from './contexts/AuthContext'
+
 
 import myTheme from './config/MyTheme'
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
@@ -21,21 +23,23 @@ function App() {
 
   return (
    <>
-    <UserProvider>
-        <div className='App'>
-                <StylesProvider jss={jss}>
-                    <ThemeProvider theme={myTheme}>
-                        <CssBaseline />
-                        <SocketProvider >
-                                <ChatroomProvider>
-                                    <Router>
-                                        <AppRouter />
-                                    </Router>
-                                </ChatroomProvider>
-                        </SocketProvider>
-                    </ThemeProvider>
-                </StylesProvider>
-            </div>
+        <UserProvider>
+            <AuthProvider>
+            <div className='App'>
+                    <StylesProvider jss={jss}>
+                        <ThemeProvider theme={myTheme}>
+                            <CssBaseline />
+                            <SocketProvider >
+                                    <ChatroomProvider>
+                                        <Router>
+                                            <AppRouter />
+                                        </Router>
+                                    </ChatroomProvider>
+                            </SocketProvider>
+                        </ThemeProvider>
+                    </StylesProvider>
+                </div>
+            </AuthProvider>
         </UserProvider>
    </>
   )
