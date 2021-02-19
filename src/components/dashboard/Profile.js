@@ -2,6 +2,7 @@ import React from 'react'
 
 import { TextField, FormControlLabel, Checkbox, Button, Grid, Link, makeStyles } from '@material-ui/core'
 
+import { useUser } from '../../contexts/UserContext'
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -14,31 +15,37 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Profile = () => {
+
     const classes = useStyles()
+
+    const [user, setUser] = useUser()
+
     return (
         <>
             <form className={classes.form} noValidate>
               <TextField
                 variant="outlined"
                 margin="normal"
-                required
+                disabled
                 fullWidth
                 id="username"
                 label="نام کاربری"
                 name="username"
                 autoComplete="username"
                 autoFocus
+                value={user.username}
               />
               <TextField
                 variant="outlined"
                 margin="normal"
                 required
                 fullWidth
-                id="roomname"
+                id="who"
                 label="نام مستعار در چت روم"
-                name="username"
-                autoComplete="username"
+                name="who"
+                autoComplete="who"
                 autoFocus
+                value={user.who}
               />
               <TextField
                 variant="outlined"

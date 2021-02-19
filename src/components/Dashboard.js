@@ -7,6 +7,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Profile from './dashboard/Profile';
 import Join from './dashboard/Join';
 
+import { useUser } from '../contexts/UserContext'
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -27,6 +28,8 @@ const Dashboard = () => {
     
     const classes = useStyles()
 
+    const [user, setUser] = useUser()
+
     return (
         <>
             <Container
@@ -46,7 +49,7 @@ const Dashboard = () => {
                     </Grid>
                     <Grid item className='mt-4'>
                         <Typography component="h1" variant="h5">
-                            محمدرضا بوربور
+                            {user.who}
                         </Typography>
                     </Grid>
                 </Grid>

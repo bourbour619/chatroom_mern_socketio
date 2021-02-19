@@ -23,24 +23,24 @@ function App() {
 
   return (
    <>
-        <UserProvider>
-            <AuthProvider>
-            <div className='App'>
-                    <StylesProvider jss={jss}>
-                        <ThemeProvider theme={myTheme}>
-                            <CssBaseline />
-                            <SocketProvider >
-                                    <ChatroomProvider>
-                                        <Router>
-                                            <AppRouter />
-                                        </Router>
-                                    </ChatroomProvider>
-                            </SocketProvider>
-                        </ThemeProvider>
-                    </StylesProvider>
-                </div>
-            </AuthProvider>
+   <AuthProvider>
+        <UserProvider>    
+                <div className='App'>
+                        <StylesProvider jss={jss}>
+                            <ThemeProvider theme={myTheme}>
+                                <CssBaseline />
+                                <SocketProvider >
+                                        <ChatroomProvider>
+                                            <Router>
+                                                <AppRouter />
+                                            </Router>
+                                        </ChatroomProvider>
+                                </SocketProvider>
+                            </ThemeProvider>
+                        </StylesProvider>
+                    </div>
         </UserProvider>
+    </AuthProvider>
    </>
   )
 }

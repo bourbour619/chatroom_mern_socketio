@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import { useAuth } from '../contexts/AuthContext'
+import { loginRoute } from '../config/api'
 
 import { useHistory, Link as RouterLink } from 'react-router-dom'
 
@@ -53,7 +54,7 @@ export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const { auth, loginUser } = useAuth()
+  const [auth, setAuth] = useAuth()
 
   const classes = useStyles();
   
@@ -62,7 +63,12 @@ export default function Login() {
   const sendLogin = async(event) => {
     event.preventDefault()
     const data = { username, password }
-    await loginUser(data)
+    loginRoute(data, (auth, data) => {
+      if(auth){
+        const { token, ttl } = data
+        setAuth({ token, ttl })
+      }
+    })
   }
 
   return (

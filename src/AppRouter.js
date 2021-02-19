@@ -34,6 +34,7 @@ const AppRouter = () => {
                 { user.auth ? <Dashboard /> : <Redirect to='/login' /> }
             </Route>
             <Route path='/chatroom/:id'>
+                {console.log(user.auth)}
                 { user.auth ? <Chatroom /> : <Redirect to='/login' /> }
             </Route>
         </>

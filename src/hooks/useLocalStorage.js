@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 
 import { PREFIX } from '../config/keys'
 
-export default function useLocalStorage(key, initialValue){
+
+export default function useLocalStorage (key, initialValue){
     const prefixedKey = PREFIX + key
     const [value, setValue] = useState(() => {
         const item = localStorage.getItem(prefixedKey)
