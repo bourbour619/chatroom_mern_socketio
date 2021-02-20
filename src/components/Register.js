@@ -15,7 +15,7 @@ import Container from '@material-ui/core/Container';
 import { useHistory, Link as RouterLink } from 'react-router-dom'
 
 import { useUser } from '../contexts/UserContext'
-
+import { registerRoute } from '../config/api'
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant='filled' {...props} />
@@ -78,35 +78,27 @@ export default function Register() {
         who,
         password
       }
-      try{
-        const done = await registerUser(data)
-        if(!done.registered){
-          setAlert({
-            msg: 'مشکلی پیش آمده یا ورودی نامعتبر است',
-            type: 'error'
-          })
-          setOpen(true)
-        }else{
-          setAlert({
-            msg: done.data.msg,
-            type: 'success'
-          })
-          setOpen(true)
-          setTimeout(() => {
-            history.push('/dashboard')
-          },3000)
-        }
-      }
-      catch(err){
-        setAlert({
-          msg: 'مشکلی پیش آمده یا ورودی نامعتبر است',
-          type: 'error'
+      registerRoute(data, (user,data) => {
+            if(!user){
+              setAlert({
+                msg: 'مشکلی پیش آمده یا ورودی نامعتبر است',
+                type: 'error'
+              })
+              setOpen(true)
+            } else {
+              setAlert({
+                msg: data.msg,
+                type: 'success'
+              })
+              setOpen(true)
+              setTimeout(() => {
+                history.push('/dashboard')
+              },3000)
+            }
         })
-        setOpen(true)
-      }
-    }
     
   }
+}
 
   return (
     <Container component="main" maxWidth="xs">

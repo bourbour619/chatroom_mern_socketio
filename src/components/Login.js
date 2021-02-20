@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import { useAuth } from '../contexts/AuthContext'
+import { useUser } from '../contexts/UserContext'
 import { loginRoute } from '../config/api'
 
 import { useHistory, Link as RouterLink } from 'react-router-dom'
@@ -54,7 +54,7 @@ export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const [auth, setAuth] = useAuth()
+  const [user, setUser] = useUser()
 
   const classes = useStyles();
   
@@ -65,11 +65,12 @@ export default function Login() {
     const data = { username, password }
     loginRoute(data, (auth, data) => {
       if(auth){
-        const { token, ttl } = data
-        setAuth({ token, ttl })
+        setUser(data)
+        history.push('/dashboard')
       }
     })
   }
+
 
   return (
     <div className= {classes.wrapper}>

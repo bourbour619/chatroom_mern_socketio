@@ -6,7 +6,7 @@ import Messages from './chatroom/Messages';
 import InRoom from './chatroom/InRoom';
 
 
-
+import { useUser } from '../contexts/UserContext'
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -26,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Chatroom = () => {
     const classes = useStyles()
+
+    const [user, setUser] = useUser()
+    
     return (
         <>
             <Container 

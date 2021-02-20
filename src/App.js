@@ -5,7 +5,6 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { ChatroomProvider } from './contexts/ChatroomContext'
 import { SocketProvider } from './contexts/SocketContext'
 import { UserProvider } from './contexts/UserContext'
-import { AuthProvider } from './contexts/AuthContext'
 
 
 import myTheme from './config/MyTheme'
@@ -23,7 +22,6 @@ function App() {
 
   return (
    <>
-   <AuthProvider>
         <UserProvider>    
                 <div className='App'>
                         <StylesProvider jss={jss}>
@@ -40,7 +38,6 @@ function App() {
                         </StylesProvider>
                     </div>
         </UserProvider>
-    </AuthProvider>
    </>
   )
 }
