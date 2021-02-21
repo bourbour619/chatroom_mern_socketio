@@ -24,10 +24,13 @@ export const UserProvider = ({children}) => {
     
     useEffect(() => {
         const { token , ttl } = user
-        setTimeout(() => {
-            localStorage.removeItem(AUTH_KEY)
+        if(token){
+            setTimeout(() => {
+                localStorage.removeItem(AUTH_KEY)
 
-        },ttl * 1000)
+            },ttl * 1000)
+        }
+        console.log(user)
     },[user])
 
 

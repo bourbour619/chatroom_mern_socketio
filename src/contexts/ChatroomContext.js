@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState, useContext } from 'react'
 
+import { useSocket } from '../contexts/SocketContext'
 
 const ChatroomContext = createContext()
 
@@ -8,7 +9,7 @@ export const useChatroom = () => {
 }
 
 export const ChatroomProvider = ({children}) => {
-    const [chatrooms, setChatrooms] = useState([
+    const iv = [
         {
             name: 'برنامه نویس‌‌ها',
             room: 'developers',
@@ -24,7 +25,16 @@ export const ChatroomProvider = ({children}) => {
             room: 'general',
             users: []
         }
-    ])
+    ]
+
+    const [chatrooms, setChatrooms] = useState([])
+    const { socket } = useSocket()
+
+    useEffect(() => {
+        socket.on('get-chatrooms', (chatrooms) => {
+            setChatrooms(chatrooms)
+        })
+    })
 
     return (
         <ChatroomContext.Provider value= {[chatrooms, setChatrooms]}>

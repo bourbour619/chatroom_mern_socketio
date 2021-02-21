@@ -32,6 +32,19 @@ export const authRoute = (token, done) => {
             })
 }
 
+export const authRouteSync = async(tokenSync) => {
+    if(!tokenSync) return
+    const options = {
+        headers: {
+            Authorization: tokenSync
+        }
+    }
+    const res = await axios.get(`${API_URL}/auth/who`, options)
+    const { token } = res.data
+    if(token) return { done: true, data: res.data}
+    return { done: false }
+}
+
 export const registerRoute = (data, done) => {
     if(!data) return 
     axios.post(`${API_URL}/auth/register`, data)
@@ -44,3 +57,10 @@ export const registerRoute = (data, done) => {
                 done(false)
             })
 }
+
+export function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+
+  

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { Avatar, Container, Grid, makeStyles, Typography, Divider} from '@material-ui/core'
 import ChatIcon from '@material-ui/icons/Chat';
@@ -7,6 +7,7 @@ import InRoom from './chatroom/InRoom';
 
 import { useParams } from 'react-router-dom'
 
+import { useChatroom } from '../contexts/ChatroomContext'
 import { useUser } from '../contexts/UserContext'
 
 const useStyles = makeStyles((theme) => ({
@@ -28,8 +29,16 @@ const useStyles = makeStyles((theme) => ({
 const Chatroom = () => {
     const classes = useStyles()
 
-    const [user, setUser] = useUser()
+    const [chatrooms, setChatrooms] = useChatroom()
+    const [roomName, setRoomName] = useState('')
     const { room } = useParams()
+
+    useEffect(() => {
+        if(room){
+            const { name } = chatrooms.find(ch => ch.room === room)
+            setRoomName(name)
+        }
+    },[])
 
     return (
         <>
@@ -49,7 +58,7 @@ const Chatroom = () => {
                         </Avatar>
                     </Grid>
                     <Grid item className='mt-4'>
-                        <Typography component="h1" variant="h5">چت روم برنامه نویس‌ها</Typography>
+                        <Typography component="h1" variant="h5">چت روم {roomName}</Typography>
                     </Grid>
                 </Grid>
                 <Grid 

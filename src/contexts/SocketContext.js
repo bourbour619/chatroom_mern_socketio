@@ -8,19 +8,22 @@ export const useSocket = () => {
 }
 
 export const SocketProvider = ({children}) => {
-    const [socket, setSocket] = useState()
-    const [id, setId] = useState('')
+    const newSocket = io('http://localhost:5003')
+    const [socket, setSocket] = useState(newSocket)
+    const [room, setRoom] = useState('')
     useEffect(() => {
-        const newSocket = io(
-            'http://localhost:5003',
-            { query: { id }}
-        )
-        setSocket(newSocket)
+        if(room){
+            const newSocket = io(
+                    'http://localhost:5003',
+                    { query: { room }})
+            console.log(socket)
+            setSocket(newSocket)
+        }
         return () => newSocket.close()
-    },[id])
+    },[room])
 
     return (
-        <SocketContext.Provider value={[socket, setId]}>
+        <SocketContext.Provider value={{socket, room, setRoom}}>
             {children}
         </SocketContext.Provider>
     )

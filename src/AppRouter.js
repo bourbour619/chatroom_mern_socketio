@@ -74,8 +74,8 @@ const AppRouter = () => {
 
         return (
             <div className={classes.loading}>
-                            <CircularProgress className='m-auto' /> 
-                        </div>
+                    <CircularProgress className='m-auto' /> 
+            </div>
         )
     }
     

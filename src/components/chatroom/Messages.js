@@ -1,11 +1,10 @@
-import {  Button, Grid, TextField, makeStyles, Paper, List, ListItem, ListItemText, Box } from '@material-ui/core'
+import {  Button, Grid, TextField, makeStyles, Paper, List, Typography, ListItem, ListItemText, Box } from '@material-ui/core'
 
 import SendSharpIcon from '@material-ui/icons/SendSharp';
 import React, { useState, useEffect, useCallback } from 'react'
 
-import { useLocation } from 'react-router-dom'
-
 import { useSocket } from '../../contexts/SocketContext'
+import { useUser } from '../../contexts/UserContext'
 
 import moment from 'moment'
 
@@ -36,16 +35,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const Messages = () => {
+const Messages = ({room}) => {
     const [messages, setMessages] = useState([])
-    const [who, setWho] = useState(() => {
-        return Math.floor((Math.random() * 100) + 1);
-    })
     const [typing, setTyping] = useState('')
-    
-    const [socket, setId] = useSocket()
 
-    const location = useLocation()
+    const {socket, setRoom} = useSocket()
+    const [user, setUser] = useUser()
 
 
     const typeMessage= (e) => {
@@ -55,17 +50,22 @@ const Messages = () => {
         e.preventDefault()
         if(typing){
             socket.emit('send-message', {
-                who,
+                who: user.who,
                 text: typing
             })
         }
         setTyping('')
     }
 
+    useEffect(() => setRoom(room) , [])
     useEffect(() => {
-        const id = location.pathname.split('/')[2]
-        setId(id)
-    },[location.pathname])
+        socket.on('welcome-message', ({welcome}) => {
+            setMessages([...messages, {
+                welcome: true,
+                text: welcome
+            }])
+        })
+    })
 
     useEffect(() => {
         if(!socket) return 
@@ -101,15 +101,15 @@ const Messages = () => {
                         <List>
                             { messages ? messages.map((m,i) => {
                                 const lastMessage = messages.length - 1 === i 
-                                return (<ListItem key={i} className={`d-flex flex-column ${m.who === who ? 'align-items-start' : 'align-items-end'}`} >
+                                return (<ListItem key={i} className={`d-flex flex-column ${m.who === user.who || m.welcome ? 'align-items-start' : 'align-items-end'}`} >
                                     <Paper 
                                     elevation={3}
-                                    className={m.who === who ? classes.fromMe : classes.fromOther}
+                                    className={m.who === user.who || m.welcome ? classes.fromMe : classes.fromOther}
                                     >
                                         <ListItemText primary={m.text} ref={ lastMessage ? goToLastMessage : null} />
                                     </Paper>
                                     <Box >
-                                        <small className='text-muted font-italic'>{'شما ' + moment().format('HH:mm').toString()}</small>
+                                        <small className='text-muted font-italic'>{ `${m.who} ` + moment().format('HH:mm').toString()}</small>
                                     </Box>
                                 </ListItem>)
                             }): [] }

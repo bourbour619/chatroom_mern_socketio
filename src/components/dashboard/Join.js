@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import { Button, FormControl, InputLabel, MenuItem, makeStyles, Select, Grid } from '@material-ui/core'
 
 import { useChatroom } from '../../contexts/ChatroomContext'
-import { useUser } from '../../contexts/UserContext'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 const Join = () => {
     
     const history = useHistory()
-    const [user, setUser] = useUser()
     const [chatrooms, setChatrooms] = useChatroom()
     const [chosen, setChosen]= useState('')
 
@@ -39,17 +37,22 @@ const Join = () => {
     const joinChatroom = (event) => {
         event.preventDefault()
         if(chosen){
-            const wasInRoom = chatrooms.some(ch => ch.room === chosen
-                                                    &&
-                                                    ch.users.find(u => u === user.who))
-            if(!wasInRoom){
-                chatrooms.find(ch => ch.room === chosen).users.push(user.who)
-                setChatrooms(chatrooms)
-            }
             history.push(`/chatroom/${chosen}`)
         }
     }
     
+    // useEffect(() => {
+    //     if(chosen){
+    //         const wasInRoom = chatrooms.some(ch => ch.room === chosen
+    //                                                 &&
+    //                                                 ch.users.find(u => u === user.who))
+    //         if(!wasInRoom){
+    //             chatrooms.find(ch => ch.room === chosen).users.push(user.who)
+    //             setChatrooms(chatrooms)
+    //         }
+    //     }
+    // },[chosen])
+
     return (
         <>
             <form noValidate className={classes.form} onSubmit={joinChatroom}>
