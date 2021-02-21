@@ -5,6 +5,7 @@ import ChatIcon from '@material-ui/icons/Chat';
 import Messages from './chatroom/Messages';
 import InRoom from './chatroom/InRoom';
 
+import { useParams } from 'react-router-dom'
 
 import { useUser } from '../contexts/UserContext'
 
@@ -28,7 +29,8 @@ const Chatroom = () => {
     const classes = useStyles()
 
     const [user, setUser] = useUser()
-    
+    const { room } = useParams()
+
     return (
         <>
             <Container 
@@ -62,7 +64,7 @@ const Chatroom = () => {
                     </Grid>
                     <Divider orientation='vertical' flexItem light={true}  />
                     <Grid item xs={3}>
-                        <InRoom />
+                        <InRoom room={room}/>
                     </Grid>
                 </Grid>
             </Container>

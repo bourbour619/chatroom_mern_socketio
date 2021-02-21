@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
-import { Route, Switch, Redirect, useLocation, useHistory } from 'react-router-dom'
-import { makeStyles } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
+import { Route, Switch, Redirect, useLocation } from 'react-router-dom'
+import { CircularProgress, makeStyles } from '@material-ui/core'
 
 import Login from './components/Login';
 import Register from './components/Register';
@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard'
 import  Chatroom  from './components/Chatroom';
 
 import { useUser } from './contexts/UserContext'
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -18,36 +19,45 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    loading: {
+        height: '100vh',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 }))
 
 
 
 
-// const routes = [
-//     {
-//         path: '/register',
-//         component: <Register />
-//     },
-//     {
-//         path: '/dashboard',
-//         component: <Dashboard />
-//     },
-//     {
-//         path: '/chatroom/:id',
-//         component: <Chatroom />
-//     }
-// ]
+const routes = [
+    {
+        path: '/register',
+        component: <Register />
+    },
+    {
+        path: '/dashboard',
+        component: <Dashboard />
+    },
+    {
+        path: '/chatroom/:room',
+        component: <Chatroom />
+    }
+]
 
 const AppRouter = () => {
 
     const [user, setUser] = useUser()
+    const [loading, setLoading] = useState(true)
+    
 
     const NoMatch = () => {
-    
-        const classes = useStyles()
+
         let location = useLocation();
-      
+        const classes = useStyles()
+
         return (
             <div className={classes.notFound}>
                     <h1>خطای 404</h1>
@@ -58,51 +68,68 @@ const AppRouter = () => {
             </div>
         )
     }
+
+    const Loading = () => {
+        const classes = useStyles()
+
+        return (
+            <div className={classes.loading}>
+                            <CircularProgress className='m-auto' /> 
+                        </div>
+        )
+    }
     
-    // const PrivateRoute = ({children, ...rest}) => {
-    //     console.log(user)
-    //     return (
-    //         <Route
-    //           {...rest}
-    //           render={({ location }) =>
-    //             user.token ? (
-    //               children
-    //             ) : (
-    //               <Redirect
-    //                 to={{
-    //                   pathname: "/login",
-    //                   state: { from: location }
-    //                 }}
-    //               />
-    //             )
-    //           }
-    //         />
-    //       );
+    const PrivateRoute = ({children, ...rest}) => {
+        return (
+            <Route
+              {...rest}
+              render={({ location }) =>
+                user.token ? (
+                  children
+                ) : (
+                  <Redirect
+                    to={{
+                      pathname: "/login",
+                      state: { from: location }
+                    }}
+                  />
+                )
+              }
+            />
+          );
     
-    // }
+    }
+
+
+
+    useEffect(() =>{
+        setTimeout(() => {
+            if(user.token !== ''){
+                setTimeout(() => setLoading(false), 1000)
+            } else {
+                setLoading(!loading)
+            }
+        },1000)
+    },[user])
 
 
     return (
-        <>
-            {/* {routes.map((route,i) => (
-                    <PrivateRoute key={i} path={route.path}>
-                        {route.component}
-                    </PrivateRoute>
-            ))} */}
-        <Switch>
-            <Route exact path='/' render={() => <Redirect to='/login' />} />
-            <Route exact path='/login'>
-                {!user.token ? <Login /> : <Redirect to='/dashboard' />}
-            </Route>
-            <Route exact path='/register' component={Register} />
-            <Route exact path='/dashboard'> 
-                {user.token ? <Dashboard /> : <Redirect to='/login' />}
-            </Route>
-            <Route exact path='/chatroom/:id'> 
-                {user.token ? <Chatroom /> : <Redirect to='/login' />}
-            </Route>
-            <Route path='*' component={NoMatch} />
-        </Switch>
+        <>  
+            <Switch>
+                <Route exact path='/' render={() => <Redirect to='/login' />} />
+                <Route exact path='/register' component={Register} />
+                <Route exact path='/login' component={Login} />
+                { loading ? 
+                        <Loading />
+                        : 
+                        routes.map((route,i) => (
+                            <PrivateRoute key={i} path={route.path}>
+                                {route.component}
+                            </PrivateRoute>
+                        )) 
+                }
+                <Route path='*' component={NoMatch} />
+            </Switch>
         </>
     )
 

@@ -13,7 +13,6 @@ export default function useAuthRoute (iv){
                 setValue(data)
             })
         }
-
         return iv
     })
 

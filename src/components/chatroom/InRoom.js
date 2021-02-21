@@ -3,10 +3,14 @@ import React, { useState } from 'react'
 import { List, ListItem, ListItemText, Grid, Typography } from '@material-ui/core'
 import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
 
-const InRoom = () => {
-    const [current, setCurrent] = useState([
-        'محمدرضا بوربور', 'احمد علوی','شهنازی'
-    ])
+import { useChatroom } from '../../contexts/ChatroomContext'
+
+const InRoom = ({room}) => {
+    
+    const [chatrooms, setChatrooms] = useChatroom()
+    
+    const { users } = chatrooms.find(ch => ch.room === room)
+
     return (
         <>
           <Grid
@@ -22,10 +26,10 @@ const InRoom = () => {
               </Grid>
               <Grid item>
                     <List>
-                        { current ? current.map((c,i) => (
+                        { users ? users.map((user,i) => (
                             <ListItem key= {i} >
                                 <AccountCircleRoundedIcon style= {{ color: '#3f51b5' }}/>
-                                <ListItemText primary={c} className= 'mr-2' />
+                                <ListItemText primary={user} className= 'mr-2' />
                             </ListItem>
                         )): [] }
                     </List>

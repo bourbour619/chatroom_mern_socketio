@@ -39,6 +39,12 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  wrapper: {
+    height: '90vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 }));
 
 export default function Register() {
@@ -101,6 +107,7 @@ export default function Register() {
 }
 
   return (
+    <div className={classes.wrapper}>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -200,6 +207,6 @@ export default function Register() {
           </Alert>
       </Snackbar>
     </Container>
-    
+    </div>
   );
 }

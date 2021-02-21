@@ -11,20 +11,23 @@ export const ChatroomProvider = ({children}) => {
     const [chatrooms, setChatrooms] = useState([
         {
             name: 'برنامه نویس‌‌ها',
-            id: 'developers'
+            room: 'developers',
+            users: []
         },
         {
             name: 'مدیران',
-            id: 'managers'
+            room: 'managers',
+            users: []
         },
         {
             name: 'عمومی',
-            id: 'general'
+            room: 'general',
+            users: []
         }
     ])
 
     return (
-        <ChatroomContext.Provider value= {chatrooms}>
+        <ChatroomContext.Provider value= {[chatrooms, setChatrooms]}>
             {children}
         </ChatroomContext.Provider>
     )
