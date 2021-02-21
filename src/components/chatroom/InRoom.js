@@ -15,12 +15,15 @@ const InRoom = ({room}) => {
     const [presents, setPresents] = useState([])
 
     useEffect(() => setRoom(room) , [])
-    useEffect(() => socket.emit('user-joined', user.who), [socket])
+    useEffect(() => {
+        socket.emit('user-joined', user.who)
+    }, [socket])
 
     useEffect(() => {
         socket.on('get-users', (users) => {
             if(users) setPresents(users)
         })
+        return () => socket.emit('user-left', user.who)
     })
 
 

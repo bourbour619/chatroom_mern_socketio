@@ -32,10 +32,15 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1),
         backgroundColor: theme.palette.secondary.main,
         color: 'white'
+    },
+    fromRoom: {
+        padding: theme.spacing(1),
+        backgroundColor: 'black',
+        color: 'white',
     }
 }))
 
-const Messages = ({room}) => {
+const Messages = ({room, roomName}) => {
     const [messages, setMessages] = useState([])
     const [typing, setTyping] = useState('')
 
@@ -59,12 +64,18 @@ const Messages = ({room}) => {
 
     useEffect(() => setRoom(room) , [])
     useEffect(() => {
-        socket.on('welcome-message', ({welcome}) => {
-            setMessages([...messages, {
-                welcome: true,
-                text: welcome
-            }])
+        socket.on('welcome-message', (welcome) => {
+            const firstWelcome = messages.every(m => m !== welcome)
+            if(firstWelcome){
+                const { who, msg } = welcome
+                setMessages([...messages, {
+                    welcome: true,
+                    who,
+                    text: msg
+                }])
+            }
         })
+        return () => socket.off('welcome-message')
     })
 
     useEffect(() => {
@@ -101,15 +112,23 @@ const Messages = ({room}) => {
                         <List>
                             { messages ? messages.map((m,i) => {
                                 const lastMessage = messages.length - 1 === i 
-                                return (<ListItem key={i} className={`d-flex flex-column ${m.who === user.who || m.welcome ? 'align-items-start' : 'align-items-end'}`} >
+                                return (<ListItem key={i} className={`d-flex flex-column ${m.welcome 
+                                                                                            ? 'align-items-center'
+                                                                                            :  m.who === user.who  
+                                                                                            ? 'align-items-start' 
+                                                                                            : 'align-items-end'}`} >
                                     <Paper 
                                     elevation={3}
-                                    className={m.who === user.who || m.welcome ? classes.fromMe : classes.fromOther}
+                                    className={m.welcome 
+                                                ? classes.fromRoom
+                                                : m.who === user.who  
+                                                ? classes.fromMe 
+                                                : classes.fromOther}
                                     >
-                                        <ListItemText primary={m.text} ref={ lastMessage ? goToLastMessage : null} />
+                                        <ListItemText primary={m.welcome ? `${m.who} ${m.text}` : m.text} ref={ lastMessage ? goToLastMessage : null} />
                                     </Paper>
                                     <Box >
-                                        <small className='text-muted font-italic'>{ `${m.who} ` + moment().format('HH:mm').toString()}</small>
+                                        <small className='text-muted font-italic'>{ `${m.welcome ? roomName : m.who} ` + moment().format('HH:mm').toString()}</small>
                                     </Box>
                                 </ListItem>)
                             }): [] }

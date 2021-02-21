@@ -8,7 +8,6 @@ import InRoom from './chatroom/InRoom';
 import { useParams } from 'react-router-dom'
 
 import { useChatroom } from '../contexts/ChatroomContext'
-import { useUser } from '../contexts/UserContext'
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -69,7 +68,7 @@ const Chatroom = () => {
                     className={classes.componentWrapper}
                 >
                     <Grid item xs={8} >
-                        <Messages />
+                        <Messages room={room} roomName={roomName} />
                     </Grid>
                     <Divider orientation='vertical' flexItem light={true}  />
                     <Grid item xs={3}>
