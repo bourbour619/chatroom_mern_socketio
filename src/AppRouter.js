@@ -119,7 +119,7 @@ const AppRouter = () => {
                 <Route exact path='/' render={() => <Redirect to='/login' />} />
                 <Route exact path='/register' component={Register} />
                 <Route exact path='/login'>
-                        { !user.token ? <Login/> : <Redirect to='/dashboard' /> }
+                        { !user.token ? <Login/> : setTimeout(() => <Redirect to='/dashboard' />, 3000) }
                 </Route>
                 { loading ? 
                         <Loading />
