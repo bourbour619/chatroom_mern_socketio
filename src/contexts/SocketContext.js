@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect, useContext } from 'react'
 import { io } from 'socket.io-client'
 
+import { SOCKET_URL } from '../config/keys'
+
 const SocketContext = createContext()
 
 export const useSocket = () => {
@@ -8,15 +10,14 @@ export const useSocket = () => {
 }
 
 export const SocketProvider = ({children}) => {
-    const newSocket = io('http://localhost:5003')
+    const newSocket = io(SOCKET_URL)
     const [socket, setSocket] = useState(newSocket)
     const [room, setRoom] = useState('')
     useEffect(() => {
         if(room){
             const newSocket = io(
-                    'http://localhost:5003',
+                    SOCKET_URL,
                     { query: { room }})
-            console.log(socket)
             setSocket(newSocket)
         }
         return () => newSocket.close()

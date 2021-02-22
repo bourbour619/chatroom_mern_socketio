@@ -14,7 +14,6 @@ import Container from '@material-ui/core/Container';
 
 import { useHistory, Link as RouterLink } from 'react-router-dom'
 
-import { useUser } from '../contexts/UserContext'
 import { registerRoute } from '../config/api'
 
 const Alert = (props) => {
@@ -57,7 +56,6 @@ export default function Register() {
   const [alert, setAlert] = useState({})
   const [open, setOpen] = useState(false)
 
-  const { registerUser } = useUser()
 
   const classes = useStyles();
 
@@ -98,8 +96,8 @@ export default function Register() {
               })
               setOpen(true)
               setTimeout(() => {
-                history.push('/dashboard')
-              },3000)
+                history.push(`/login?username=${username}`)
+              },2000)
             }
         })
     

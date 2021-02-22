@@ -27,10 +27,8 @@ export const UserProvider = ({children}) => {
         if(token){
             setTimeout(() => {
                 localStorage.removeItem(AUTH_KEY)
-
             },ttl * 1000)
         }
-        console.log(user)
     },[user])
 
 
