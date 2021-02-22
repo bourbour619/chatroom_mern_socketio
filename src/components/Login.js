@@ -150,6 +150,7 @@ export default function Login() {
                 margin="normal"
                 required
                 fullWidth
+                value={password}
                 name="password"
                 label="رمز عبور"
                 type="password"

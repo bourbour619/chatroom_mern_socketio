@@ -118,7 +118,9 @@ const AppRouter = () => {
             <Switch>
                 <Route exact path='/' render={() => <Redirect to='/login' />} />
                 <Route exact path='/register' component={Register} />
-                <Route exact path='/login' component={Login} />
+                <Route exact path='/login'>
+                        { !user.token ? <Login/> : <Redirect to='/dashboard' /> }
+                </Route>
                 { loading ? 
                         <Loading />
                         : 
