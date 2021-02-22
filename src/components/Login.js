@@ -62,6 +62,8 @@ export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
+  const [alert, setAlert] = useState({})
+  const [open, setOpen] = useState(false)
 
   const [user, setUser] = useUser()
 
