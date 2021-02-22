@@ -118,14 +118,7 @@ const AppRouter = () => {
             <Switch>
                 <Route exact path='/' render={() => <Redirect to='/login' />} />
                 <Route exact path='/register' component={Register} />
-                <Route exact path='/login'>
-                        { !user.token 
-                            ? <Login/> 
-                            : setTimeout(() => <Loading />, 3000)
-                                &&
-                            <Redirect to='/dashboard'/> 
-                        }
-                </Route>
+                <Route exact path='/login' component={Login} />
                 { loading ? 
                         <Loading />
                         : 

@@ -83,7 +83,15 @@ export default function Login() {
       setPassword(ckLogin[1])
     }
 
-  },[])
+  })
+
+  useEffect(() => {
+      if(user.token){
+        setTimeout(() => {
+          history.push('/dashboard')
+        },2000)
+      }
+  },[user])
 
   const closeSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
@@ -112,9 +120,9 @@ export default function Login() {
             type: 'success'
           })
           setOpen(true)
-          setTimeout(() => {
-            history.push('/dashboard')
-          },2000)
+          // setTimeout(() => {
+          //   history.push('/dashboard')
+          // },2000)
         }
     })
   }
