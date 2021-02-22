@@ -12,5 +12,5 @@ export const getCookie = (name) => {
                              .split(';')
                              .find(ck => ck.startsWith(`${name}=`))
     if(!inCookie) return
-    return atob(inCookie).split('=')[1]
+    return atob(inCookie.split('=')[1])
 }
