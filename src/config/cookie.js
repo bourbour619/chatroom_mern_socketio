@@ -1,7 +1,7 @@
 import moment from 'moment'
 
 export const setCookie = (name, value, hours, path) => {
-        const expires = moment().add(days,'h').utc().format()
+        const expires = moment().add(hours,'h').utc().format()
         document.cookie = `${name}=${btoa(value)};expires=${expires};path=/${path}`
         
 }
