@@ -24,19 +24,19 @@ export const UserProvider = ({children}) => {
     const [user, setUser] = useAuthRoute(iv)
     
     useEffect(() => {
-        const { token , ttl } = user
-        if(token){
-            setTimeout(() => {
-                localStorage.removeItem(AUTH_KEY)
-            },ttl * 1000)
-        }
+            const { token , ttl } = user
+            if(token){
+                setTimeout(() => {
+                    localStorage.removeItem(AUTH_KEY)
+                },ttl * 1000)
+            }
     },[user])
 
     useEffect(() => {
         const { token , ttl } = user
         authRoute(token, (done, data) => {
-            if(!done) setUser(iv)
-            setUser(data)
+            if(!done) return setUser(iv)
+            return setUser(data)
         })
     },[])
 

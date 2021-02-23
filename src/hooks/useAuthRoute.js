@@ -18,9 +18,9 @@ export default function useAuthRoute (iv){
     })
 
     useEffect(() => {
-        const { token, ttl } = value 
-        // const auth_data = { token, ttl }
-        localStorage.setItem(AUTH_KEY, JSON.stringify(value))
+        if(value){
+            localStorage.setItem(AUTH_KEY, JSON.stringify(value))
+        }
     },[value])
 
     return [value, setValue]

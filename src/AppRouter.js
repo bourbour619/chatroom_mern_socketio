@@ -103,13 +103,13 @@ const AppRouter = () => {
 
 
     useEffect(() =>{
-        setTimeout(() => {
-            if(user.token !== ''){
-                setTimeout(() => setLoading(false), 1000)
-            } else {
-                setLoading(!loading)
-            }
-        },1000)
+            setTimeout(() => {
+                if(user.token !== ''){
+                    setTimeout(() => setLoading(false), 1000)
+                } else {
+                    setLoading(!loading)
+                }
+            },1000)
     },[user])
 
 
