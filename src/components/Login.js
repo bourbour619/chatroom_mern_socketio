@@ -82,8 +82,7 @@ export default function Login() {
       setUsername(ckLogin[0])
       setPassword(ckLogin[1])
     }
-
-  })
+  },[])
 
   useEffect(() => {
       if(user.token){
@@ -120,9 +119,6 @@ export default function Login() {
             type: 'success'
           })
           setOpen(true)
-          // setTimeout(() => {
-          //   history.push('/dashboard')
-          // },2000)
         }
     })
   }

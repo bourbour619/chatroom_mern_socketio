@@ -3,6 +3,7 @@ import React, {  useState, useEffect, useContext , createContext } from 'react'
 import useAuthRoute from '../hooks/useAuthRoute'
 
 import { AUTH_KEY } from '../config/keys'
+import { authRoute } from '../config/api'
 
 
 
@@ -30,6 +31,14 @@ export const UserProvider = ({children}) => {
             },ttl * 1000)
         }
     },[user])
+
+    useEffect(() => {
+        const { token , ttl } = user
+        authRoute(token, (done, data) => {
+            if(!done) setUser(iv)
+            setUser(data)
+        })
+    },[])
 
 
     return (
