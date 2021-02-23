@@ -37,7 +37,8 @@ const Chatroom = () => {
             const { name } = chatrooms.find(ch => ch.room === room)
             setRoomName(name)
         }
-    },[])
+    },[room])
+
 
     return (
         <>

@@ -22,22 +22,22 @@ function App() {
 
   return (
    <>
+    <SocketProvider>
         <UserProvider>    
                 <div className='App'>
                         <StylesProvider jss={jss}>
                             <ThemeProvider theme={myTheme}>
                                 <CssBaseline />
-                                <SocketProvider >
                                         <ChatroomProvider>
                                             <Router>
                                                 <AppRouter />
                                             </Router>
                                         </ChatroomProvider>
-                                </SocketProvider>
                             </ThemeProvider>
                         </StylesProvider>
                     </div>
         </UserProvider>
+    </SocketProvider>
    </>
   )
 }

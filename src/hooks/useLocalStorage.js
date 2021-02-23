@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
+// import { authRoute } from '../config/api'
 
-import { AUTH_KEY } from '../config/keys'
-import { authRoute, sleep } from '../config/api'
-
-export default function useAuthRoute (iv){
+export default function useLocalStorage (key,iv){
     const [value, setValue] = useState(() => {
-        const auth_data = localStorage.getItem(AUTH_KEY)
+        const auth_data = localStorage.getItem(key)
         // if(auth_data){
         //     const { token, ttl } = JSON.parse(auth_data)
         //     authRoute(token, (done, data) => {
@@ -19,7 +17,7 @@ export default function useAuthRoute (iv){
 
     useEffect(() => {
         if(value){
-            localStorage.setItem(AUTH_KEY, JSON.stringify(value))
+            localStorage.setItem(key, JSON.stringify(value))
         }
     },[value])
 

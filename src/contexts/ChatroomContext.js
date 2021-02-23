@@ -13,17 +13,23 @@ export const ChatroomProvider = ({children}) => {
         {
             name: 'برنامه نویس‌‌ها',
             room: 'developers',
-            users: []
+            no: 0,
+            users: [],
+            messages: []
         },
         {
             name: 'مدیران',
             room: 'managers',
-            users: []
+            no: 0,
+            users: [],
+            messages: []
         },
         {
             name: 'عمومی',
             room: 'general',
-            users: []
+            no: 0,
+            users: [],
+            messages: []
         }
     ]
 

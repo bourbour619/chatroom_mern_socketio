@@ -5,6 +5,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 
 import { useSocket } from '../../contexts/SocketContext'
 import { useUser } from '../../contexts/UserContext'
+import { useChatroom } from '../../contexts/ChatroomContext'
 
 import moment from 'moment'
 
@@ -13,9 +14,10 @@ moment.locale('fa')
 
 const useStyles = makeStyles((theme) => ({
     sendBtn: {
-        margin: theme.spacing(2,0,0),
+        margin: theme.spacing(2,'auto',0),
         height: 56,
-        width: '25%'
+        width: 120
+
     },
     messageHistory: {
         marginTop: theme.spacing(2),
@@ -46,6 +48,7 @@ const Messages = ({room, roomName}) => {
 
     const {socket, setRoom} = useSocket()
     const [user, setUser] = useUser()
+    const [chatrooms, setChatrooms] = useChatroom()
 
 
     const typeMessage= (e) => {
@@ -64,6 +67,12 @@ const Messages = ({room, roomName}) => {
 
     useEffect(() => setRoom(room) , [])
     useEffect(() => {
+        const initMessages = chatrooms.find(ch => ch.room === room)['messages']
+        setMessages(initMessages)
+    },[chatrooms])
+    
+    useEffect(() => {
+        if(!socket) return
         socket.on('welcome-message', (welcome) => {
             const firstWelcome = messages.every(m => m !== welcome)
             if(firstWelcome){
@@ -76,7 +85,7 @@ const Messages = ({room, roomName}) => {
             }
         })
         return () => socket.off('welcome-message')
-    })
+    },[socket])
 
     useEffect(() => {
         if(!socket) return 
@@ -147,7 +156,7 @@ const Messages = ({room, roomName}) => {
                                         margin="normal"
                                         autoFocus
                                         onChange= {typeMessage}
-                                        className='w-75'
+                                        className='w-75 mx-auto'
                                         value= { typing }
                                     />
                                     <Button 

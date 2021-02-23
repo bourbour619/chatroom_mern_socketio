@@ -1,10 +1,11 @@
 import React, {  useState, useEffect, useContext , createContext } from 'react'
 
-import useAuthRoute from '../hooks/useAuthRoute'
 
 import { AUTH_KEY } from '../config/keys'
 import { authRoute } from '../config/api'
+import useLocalStorage from '../hooks/useLocalStorage'
 
+import { useSocket } from '../contexts/SocketContext'
 
 
 const UserContext = createContext()
@@ -19,9 +20,10 @@ export const UserProvider = ({children}) => {
         usrename: '',
         who: '',
         token: '',
-        ttl: 0
+        ttl: 0,
     }
-    const [user, setUser] = useAuthRoute(iv)
+    const [user, setUser] = useLocalStorage(AUTH_KEY,iv)
+    const { socket } = useSocket()
     
     useEffect(() => {
             const { token , ttl } = user
@@ -30,6 +32,12 @@ export const UserProvider = ({children}) => {
                     localStorage.removeItem(AUTH_KEY)
                 },ttl * 1000)
             }
+    },[user])
+
+    useEffect(() => {
+        if(!user.token){
+            socket.emit('user-left-all', user.who)
+        }
     },[user])
 
     useEffect(() => {
