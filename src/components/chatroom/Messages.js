@@ -66,9 +66,6 @@ const Messages = ({room, roomName}) => {
 
     const typeMessage= (e) => {
         setTyping(e.target.value)
-        if(typing){
-            socket.emit('set-me-typing', user.who)
-        }
     }
     const newMessage = (e) => {
         e.preventDefault()
@@ -82,12 +79,28 @@ const Messages = ({room, roomName}) => {
     }
 
     useEffect(() => {
+        if(!socket) return 
+        if(typing !== ''){
+            socket.emit('set-me-typing', user.who)
+        } else {
+            socket.emit('clear-me-typing', user.who)
+        }
+    })
+
+    useEffect(() => {
         if(!socket) return
         socket.on('get-other-typing', (other) => {
             if(other.includes(user.who)){
                 other = other.filter(o => o !== user.who)
             }
-            if(other) setOtherTyping(other)
+            if(other.length === 0) setOtherTyping([]) 
+            if(other.length === 1) {
+                setOtherTyping(other)
+            }
+            if(other.length > 1){
+                other = other[0] + 'و ...'
+                setOtherTyping(other)
+            }
         })
         return () => socket.off('get-other-typing')
     })
@@ -167,10 +180,13 @@ const Messages = ({room, roomName}) => {
                                 </ListItem>)
                             }): [] }
                         </List>
-                        { otherTyping ? <Box className={classes.typingRecord}>
-                            <small className='text-muted'>{otherTyping} در حال نوشتن</small>
-                            </Box>
-                        : '' }
+                        <Box className={classes.typingRecord}>
+                            { otherTyping.length !== 0 ? 
+                                <small className='text-muted'>
+                                    {otherTyping} در حال نوشتن
+                                </small>
+                            : '' }
+                        </Box>
                     </Paper>
                 </Grid>
                 <Grid item>

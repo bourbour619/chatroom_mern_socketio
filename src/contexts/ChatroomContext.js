@@ -15,21 +15,24 @@ export const ChatroomProvider = ({children}) => {
             room: 'developers',
             no: 0,
             users: [],
-            messages: []
+            messages: [],
+            typing: []
         },
         {
             name: 'مدیران',
             room: 'managers',
             no: 0,
             users: [],
-            messages: []
+            messages: [],
+            typing: []
         },
         {
             name: 'عمومی',
             room: 'general',
             no: 0,
             users: [],
-            messages: []
+            messages: [],
+            typgin :[]
         }
     ]
 
