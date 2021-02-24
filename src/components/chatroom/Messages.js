@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(2),
         height: 600,
         borderColor: theme.palette.primary.main,
-        overflow: 'auto'
+        overflow: 'auto',
+        position: 'relative'
     },
     fromMe: {
         padding: theme.spacing(1),
@@ -39,12 +40,24 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1),
         backgroundColor: 'black',
         color: 'white',
+    },
+    typingRecord: {
+        position: 'absolute',
+        width: '100%',
+        bottom: 0,
+        right: 0,
+        textAlign: 'center',
+        margin: theme.spacing(1),
+        fontSize: '1.2rem',
+        fontStyle: 'italic'
     }
 }))
 
 const Messages = ({room, roomName}) => {
     const [messages, setMessages] = useState([])
     const [typing, setTyping] = useState('')
+    const[otherTyping, setOtherTyping] = useState('')
+    
 
     const {socket, setRoom} = useSocket()
     const [user, setUser] = useUser()
@@ -53,6 +66,9 @@ const Messages = ({room, roomName}) => {
 
     const typeMessage= (e) => {
         setTyping(e.target.value)
+        if(typing){
+            socket.emit('set-me-typing', user.who)
+        }
     }
     const newMessage = (e) => {
         e.preventDefault()
@@ -65,15 +81,24 @@ const Messages = ({room, roomName}) => {
         setTyping('')
     }
 
-    useEffect(() => setRoom(room) , [])
     useEffect(() => {
-        const initMessages = chatrooms.find(ch => ch.room === room)['messages']
-        setMessages(initMessages)
-    },[chatrooms])
+        if(!socket) return
+        socket.on('get-other-typing', (other) => {
+            if(other.includes(user.who)){
+                other = other.filter(o => o !== user.who)
+            }
+            if(other) setOtherTyping(other)
+        })
+        return () => socket.off('get-other-typing')
+    })
+
+    useEffect(() => setRoom(room) , [])
     
     useEffect(() => {
         if(!socket) return
         socket.on('welcome-message', (welcome) => {
+            const initMessages = chatrooms.find(ch => ch.room === room)['messages']
+            if(initMessages) setMessages(initMessages)
             const firstWelcome = messages.every(m => m !== welcome)
             if(firstWelcome){
                 const { who, msg } = welcome
@@ -142,6 +167,10 @@ const Messages = ({room, roomName}) => {
                                 </ListItem>)
                             }): [] }
                         </List>
+                        { otherTyping ? <Box className={classes.typingRecord}>
+                            <small className='text-muted'>{otherTyping} در حال نوشتن</small>
+                            </Box>
+                        : '' }
                     </Paper>
                 </Grid>
                 <Grid item>
