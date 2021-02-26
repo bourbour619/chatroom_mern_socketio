@@ -33,11 +33,11 @@ const Chatroom = () => {
     const { room } = useParams()
 
     useEffect(() => {
-        if(room){
+        if(room && chatrooms){
             const { name } = chatrooms.find(ch => ch.room === room)
             setRoomName(name)
         }
-    },[room])
+    },[chatrooms])
 
 
     return (

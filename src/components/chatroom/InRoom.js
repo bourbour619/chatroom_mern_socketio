@@ -3,20 +3,19 @@ import React, { useState, useEffect } from 'react'
 import { List, ListItem, ListItemText, Grid, Typography } from '@material-ui/core'
 import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
 
-import { useChatroom } from '../../contexts/ChatroomContext'
 import { useUser } from '../../contexts/UserContext'
 import { useSocket } from '../../contexts/SocketContext'
 
 const InRoom = ({room}) => {
     
-    const [chatrooms, setChatrooms] = useChatroom()
-    const [user, setUser] = useUser()
     const { socket, setRoom } = useSocket()
+    const [user, setUser] = useUser()
     const [presents, setPresents] = useState([])
 
     useEffect(() => setRoom(room) , [])
+    
     useEffect(() => {
-        socket.emit('user-joined', user.who)
+        socket.emit('user-joined', { who: user.who, room})
         return () => socket.emit('user-left', user.who)
     }, [socket])
 
@@ -24,8 +23,8 @@ const InRoom = ({room}) => {
         socket.on('get-users', (users) => {
             if(users) setPresents(users)
         })
+        return () => socket.off('get-users')
     })
-
 
     return (
         <>

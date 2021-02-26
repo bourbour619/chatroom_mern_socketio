@@ -30,12 +30,14 @@ export const UserProvider = ({children}) => {
             if(token){
                 setTimeout(() => {
                     localStorage.removeItem(AUTH_KEY)
+                    return setUser(iv)
                 },ttl * 1000)
             }
-    },[user])
+    })
 
     useEffect(() => {
-        if(!user.token){
+        const auth_data = localStorage.getItem(AUTH_KEY)
+        if(!user.token && !auth_data){
             socket.emit('user-left-all', user.who)
         }
     },[user])

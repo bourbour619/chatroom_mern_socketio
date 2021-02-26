@@ -8,6 +8,7 @@ import { useUser } from '../../contexts/UserContext'
 import { useChatroom } from '../../contexts/ChatroomContext'
 
 import moment from 'moment'
+import _ from 'lodash'
 
 moment.locale('fa')
 
@@ -16,12 +17,12 @@ const useStyles = makeStyles((theme) => ({
     sendBtn: {
         margin: theme.spacing(2,'auto',0),
         height: 56,
-        width: 120
+        width: '15%'
 
     },
     messageHistory: {
         marginTop: theme.spacing(2),
-        height: 600,
+        height: 700,
         borderColor: theme.palette.primary.main,
         overflow: 'auto',
         position: 'relative'
@@ -42,14 +43,17 @@ const useStyles = makeStyles((theme) => ({
         color: 'white',
     },
     typingRecord: {
-        position: 'absolute',
+        // position: 'absolute',
         width: '100%',
-        bottom: 0,
-        right: 0,
+        // bottom: 0,
+        // right: 0,
         textAlign: 'center',
         margin: theme.spacing(1),
         fontSize: '1.2rem',
         fontStyle: 'italic'
+    },
+    messeageInput:{
+        minWidth: '80%'
     }
 }))
 
@@ -106,24 +110,34 @@ const Messages = ({room, roomName}) => {
     })
 
     useEffect(() => setRoom(room) , [])
+
     
     useEffect(() => {
+        const im = chatrooms.find(ch => ch.room === room)['messages']
+        if(!_.isEqual(im, messages) && im){
+            setMessages(im)
+        }       
+    },[chatrooms])
+
+    useEffect(() => {
         if(!socket) return
+        console.log(socket)
         socket.on('welcome-message', (welcome) => {
-            const initMessages = chatrooms.find(ch => ch.room === room)['messages']
-            if(initMessages) setMessages(initMessages)
-            const firstWelcome = messages.every(m => m !== welcome)
-            if(firstWelcome){
-                const { who, msg } = welcome
-                setMessages([...messages, {
-                    welcome: true,
-                    who,
-                    text: msg
-                }])
-            }
+            const { who, msg } = welcome
+            const fw = messages.every(m => !_.isEqual(m,{
+                welcome: true,
+                who,
+                text: msg
+            }))
+            if(!fw) return 
+            setMessages([...messages, {
+                welcome: true,
+                who,
+                text: msg
+            }])
         })
         return () => socket.off('welcome-message')
-    },[socket])
+    })
 
     useEffect(() => {
         if(!socket) return 
@@ -180,14 +194,14 @@ const Messages = ({room, roomName}) => {
                                 </ListItem>)
                             }): [] }
                         </List>
-                        <Box className={classes.typingRecord}>
+                    </Paper>
+                    <Box className={classes.typingRecord}>
                             { otherTyping.length !== 0 ? 
                                 <small className='text-muted'>
                                     {otherTyping} در حال نوشتن
                                 </small>
                             : '' }
                         </Box>
-                    </Paper>
                 </Grid>
                 <Grid item>
                         <form 
@@ -201,7 +215,7 @@ const Messages = ({room, roomName}) => {
                                         margin="normal"
                                         autoFocus
                                         onChange= {typeMessage}
-                                        className='w-75 mx-auto'
+                                        className= {classes.messeageInput}
                                         value= { typing }
                                     />
                                     <Button 
