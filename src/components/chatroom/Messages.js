@@ -130,13 +130,24 @@ const Messages = ({room, roomName, presents}) => {
             const fw = messages.every(m => !_.isEqual(m,wm))
             if(!fw) return
             if(messages){
-                setMessages([...messages, wm])
+                setTimeout(() => setMessages([...messages, wm]),1000)
             }else{
                 setMessages([wm])
             }
         })
         return () => socket.off('welcome-message')
-    })
+    },[socket])
+
+    useEffect(() => {
+        if(!socket) return
+        socket.on('get-chatrooms', (chs) => {
+            const im = chs.find(ch => ch.room === room)['messages']
+            if(!_.isEqual(im, messages)){
+                setMessages(im)
+            }
+        })
+        return () => socket.off('get-chatrooms')
+    },[socket])
 
     useEffect(() => {
         if(!socket) return 
