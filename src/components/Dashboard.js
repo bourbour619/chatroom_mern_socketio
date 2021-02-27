@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
     componentWrapper: {
         marginTop: theme.spacing(10),
-        width: '100%',
+        width: '70%',
         margin: 'auto'
     }
 }))

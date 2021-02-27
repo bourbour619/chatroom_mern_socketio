@@ -43,7 +43,7 @@ export const ChatroomProvider = ({children}) => {
         socket.on('get-chatrooms', (chatrooms) => {
             setChatrooms(chatrooms)
         })
-    })
+    },[socket])
 
     return (
         <ChatroomContext.Provider value= {[chatrooms, setChatrooms]}>

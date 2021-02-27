@@ -1,30 +1,24 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 
-import { List, ListItem, ListItemText, Grid, Typography } from '@material-ui/core'
+import { List, ListItem, ListItemText, Grid, Typography, Divider, makeStyles } from '@material-ui/core'
 import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
 
-import { useUser } from '../../contexts/UserContext'
-import { useSocket } from '../../contexts/SocketContext'
+const useStyles = makeStyles((theme) => ({
+       noPresents: {
+           color: 'white',
+           backgroundColor: theme.palette.primary.main,
+           borderRadius: '50%',
+           minWidth: 40,
+           minHeight: 40,
+           display: 'inline-block',
+           margin: theme.spacing(0,2)
+       }
+}))
 
-const InRoom = ({room}) => {
+
+const InRoom = ({presents}) => {
     
-    const { socket, setRoom } = useSocket()
-    const [user, setUser] = useUser()
-    const [presents, setPresents] = useState([])
-
-    useEffect(() => setRoom(room) , [])
-    
-    useEffect(() => {
-        socket.emit('user-joined', { who: user.who, room})
-        return () => socket.emit('user-left', user.who)
-    }, [socket])
-
-    useEffect(() => {
-        socket.on('get-users', (users) => {
-            if(users) setPresents(users)
-        })
-        return () => socket.off('get-users')
-    })
+    const classes = useStyles()
 
     return (
         <>
@@ -37,8 +31,10 @@ const InRoom = ({room}) => {
               <Grid item>
                   <Typography className= 'text-center' variant='h6' component='h1'>
                         کاربران حاضر در روم
+                        <div className={classes.noPresents}> {presents.length} </div>
                   </Typography>
               </Grid>
+              <Divider className='my-4'/>
               <Grid item>
                     <List>
                         { presents ? presents.map((p,i) => (

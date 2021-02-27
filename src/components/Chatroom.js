@@ -8,6 +8,8 @@ import InRoom from './chatroom/InRoom';
 import { useParams } from 'react-router-dom'
 
 import { useChatroom } from '../contexts/ChatroomContext'
+import { useSocket } from '../contexts/SocketContext'
+import { useUser } from '../contexts/UserContext'
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
@@ -29,7 +31,11 @@ const Chatroom = () => {
     const classes = useStyles()
 
     const [chatrooms, setChatrooms] = useChatroom()
+    const { socket, setRoom } = useSocket()
+    const [user, setUser] = useUser()
+    
     const [roomName, setRoomName] = useState('')
+    const [presents, setPresents] = useState([])
     const { room } = useParams()
 
     useEffect(() => {
@@ -38,6 +44,20 @@ const Chatroom = () => {
             setRoomName(name)
         }
     },[chatrooms])
+
+    useEffect(() => setRoom(room) , [])
+    
+    useEffect(() => {
+        socket.emit('user-joined', user.who)
+        return () => socket.emit('user-left', user.who)
+    }, [socket])
+
+    useEffect(() => {
+        socket.on('get-users', (users) => {
+            if(users) setPresents(users)
+        })
+        return () => socket.off('get-users')
+    })
 
 
     return (
@@ -69,11 +89,11 @@ const Chatroom = () => {
                     className={classes.componentWrapper}
                 >
                     <Grid item xs={8} >
-                        <Messages room={room} roomName={roomName} />
+                        <Messages room={room} roomName={roomName} presents={presents} />
                     </Grid>
                     <Divider orientation='vertical' flexItem light={true}  />
                     <Grid item xs={3}>
-                        <InRoom room={room}/>
+                        <InRoom presents={presents}/>
                     </Grid>
                 </Grid>
             </Container>

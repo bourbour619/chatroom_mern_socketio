@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-const Messages = ({room, roomName}) => {
+const Messages = ({room, roomName, presents}) => {
     const [messages, setMessages] = useState([])
     const [typing, setTyping] = useState('')
     const[otherTyping, setOtherTyping] = useState('')
@@ -74,9 +74,11 @@ const Messages = ({room, roomName}) => {
     const newMessage = (e) => {
         e.preventDefault()
         if(typing){
+            const time = moment().format('HH:mm').toString()
             socket.emit('send-message', {
                 who: user.who,
-                text: typing
+                text: typing,
+                time
             })
         }
         setTyping('')
@@ -117,34 +119,32 @@ const Messages = ({room, roomName}) => {
         if(!_.isEqual(im, messages) && im){
             setMessages(im)
         }       
-    },[chatrooms])
+    },[])
 
     useEffect(() => {
         if(!socket) return
-        console.log(socket)
-        socket.on('welcome-message', (welcome) => {
-            const { who, msg } = welcome
-            const fw = messages.every(m => !_.isEqual(m,{
-                welcome: true,
-                who,
-                text: msg
-            }))
-            if(!fw) return 
-            setMessages([...messages, {
-                welcome: true,
-                who,
-                text: msg
-            }])
+        let wm = {}
+        socket.on('welcome-message', (who) => {
+            const time = moment().format('HH:mm').toString()
+            wm = { welcome: true, who, time }
+            const fw = messages.every(m => !_.isEqual(m,wm))
+            if(!fw) return
+            if(messages){
+                setMessages([...messages, wm])
+            }else{
+                setMessages([wm])
+            }
         })
         return () => socket.off('welcome-message')
     })
 
     useEffect(() => {
         if(!socket) return 
-        socket.on('receive-message', ({who, text}) => {
+        socket.on('receive-message', ({who, text, time}) => {
             setMessages([...messages, {
                 who,
-                text
+                text,
+                time
             }])
         })
         return () => socket.off('receive-message')
@@ -186,10 +186,10 @@ const Messages = ({room, roomName}) => {
                                                 ? classes.fromMe 
                                                 : classes.fromOther}
                                     >
-                                        <ListItemText primary={m.welcome ? `${m.who} ${m.text}` : m.text} ref={ lastMessage ? goToLastMessage : null} />
+                                        <ListItemText primary={m.welcome ? `${m.who} خوش آمدید` : m.text} ref={ lastMessage ? goToLastMessage : null} />
                                     </Paper>
                                     <Box >
-                                        <small className='text-muted font-italic'>{ `${m.welcome ? roomName : m.who} ` + moment().format('HH:mm').toString()}</small>
+                                        <small className='text-muted font-italic'>{ `${m.welcome ? roomName : m.who !== user.who ? m.who : 'شما'} ` + m.time}</small>
                                     </Box>
                                 </ListItem>)
                             }): [] }
