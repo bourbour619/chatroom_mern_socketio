@@ -45,7 +45,7 @@ const Chatroom = () => {
         }
     },[chatrooms])
 
-    useEffect(() => setRoom(room) , [])
+    useEffect(() => setRoom(room))
     
     useEffect(() => {
         socket.emit('user-joined', user.who)

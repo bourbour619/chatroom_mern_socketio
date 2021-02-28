@@ -14,12 +14,15 @@ export const SocketProvider = ({children}) => {
     const [socket, setSocket] = useState(newSocket)
     const [room, setRoom] = useState('')
     useEffect(() => {
+        let newSocket = {}
         if(room){
-            const newSocket = io(
+             newSocket = io(
                     SOCKET_URL,
                     { query: { room }})
-            setSocket(newSocket)
+        }else{
+             newSocket = io(SOCKET_URL)
         }
+        setSocket(newSocket)
         return () => newSocket.close()
     },[room])
 

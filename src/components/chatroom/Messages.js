@@ -115,7 +115,7 @@ const Messages = ({room, roomName, presents}) => {
 
     
     useEffect(() => {
-        const im = chatrooms.find(ch => ch.room === room)['messages']
+        let im = chatrooms.find(ch => ch.room === room)['messages']
         if(!_.isEqual(im, messages) && im){
             setMessages(im)
         }       
@@ -123,40 +123,28 @@ const Messages = ({room, roomName, presents}) => {
 
     useEffect(() => {
         if(!socket) return
-        let wm = {}
         socket.on('welcome-message', (who) => {
             const time = moment().format('HH:mm').toString()
-            wm = { welcome: true, who, time }
-            const fw = messages.every(m => !_.isEqual(m,wm))
-            if(!fw) return
-            if(messages){
-                setTimeout(() => setMessages([...messages, wm]),1000)
-            }else{
-                setMessages([wm])
+            const wm = { 
+                welcome: true,
+                who,
+                time 
             }
+            socket.emit('send-message', wm)
         })
         return () => socket.off('welcome-message')
-    },[socket])
+    })
 
-    useEffect(() => {
-        if(!socket) return
-        socket.on('get-chatrooms', (chs) => {
-            const im = chs.find(ch => ch.room === room)['messages']
-            if(!_.isEqual(im, messages)){
-                setMessages(im)
-            }
-        })
-        return () => socket.off('get-chatrooms')
-    },[socket])
 
     useEffect(() => {
         if(!socket) return 
-        socket.on('receive-message', ({who, text, time}) => {
-            setMessages([...messages, {
-                who,
-                text,
-                time
-            }])
+        socket.on('receive-message', (msg) => {
+            const lsm = messages[messages.length - 1]
+            if(lsm === msg && lsm.welcome){
+                console.log('her')
+                return
+            }
+            setMessages([...messages, msg])
         })
         return () => socket.off('receive-message')
     })
@@ -197,7 +185,13 @@ const Messages = ({room, roomName, presents}) => {
                                                 ? classes.fromMe 
                                                 : classes.fromOther}
                                     >
-                                        <ListItemText primary={m.welcome ? `${m.who} خوش آمدید` : m.text} ref={ lastMessage ? goToLastMessage : null} />
+                                        <ListItemText ref={ lastMessage ? goToLastMessage : null} >
+                                            {m.welcome ? 
+                                                <small>
+                                                    {`${m.who} خوش آمدید`}
+                                                </small> 
+                                            : m.text}
+                                        </ListItemText>
                                     </Paper>
                                     <Box >
                                         <small className='text-muted font-italic'>{ `${m.welcome ? roomName : m.who !== user.who ? m.who : 'شما'} ` + m.time}</small>

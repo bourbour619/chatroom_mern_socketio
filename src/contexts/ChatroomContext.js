@@ -40,10 +40,12 @@ export const ChatroomProvider = ({children}) => {
     const { socket } = useSocket()
 
     useEffect(() => {
+        if(!socket) return
         socket.on('get-chatrooms', (chatrooms) => {
             setChatrooms(chatrooms)
         })
-    },[socket])
+        return () => socket.off('get-chatrooms')
+    })
 
     return (
         <ChatroomContext.Provider value= {[chatrooms, setChatrooms]}>
