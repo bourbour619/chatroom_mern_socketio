@@ -10,6 +10,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
     "axios": "^0.21.1",
+    "concurrently": "^7.0.0",
     "jss-rtl": "^0.3.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
