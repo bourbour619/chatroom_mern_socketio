@@ -11,8 +11,12 @@ const useStyles = makeStyles((theme) => ({
         minWidth: '100%',
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '20vw', // Fix IE 11 issue.
         marginTop: theme.spacing(1),
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
@@ -56,8 +60,8 @@ const Join = () => {
     return (
         <>
             <form noValidate className={classes.form} onSubmit={joinChatroom}>
-                        <FormControl fullWidth variant="outlined" color='secondary' className={classes.formControl}>
-                        <InputLabel id="chatroom-select-label">چت روم</InputLabel>
+                        <FormControl fullWidth variant="outlined" color='primary' className={classes.formControl}>
+                        <InputLabel id="chatroom-select-label" style={{ fontSize: 14 }}>چت روم</InputLabel>
                             <Select
                             labelId="chatroom-select-label"
                             id="chatroom-select"
@@ -65,21 +69,30 @@ const Join = () => {
                             onChange={chatroomChoosed}
                             label="چت روم"
                             className='w-100'
+                            style={{
+                                fontSize: 14,
+                            }}
                             >
-                                <MenuItem value="">
+                                <MenuItem style={{ fontSize: 14 }} value="">
                                     <em>هیچکدام</em>
                                 </MenuItem>
                                 {chatrooms ? chatrooms.map((ch,i) => (
-                                    <MenuItem key= {i} value={ch.room}>{ch.name}</MenuItem>
+                                    <MenuItem 
+                                        key= {i} 
+                                        value={ch.room} 
+                                        style={{ fontSize: 14 }} 
+                                    >
+                                        {ch.name}
+                                    </MenuItem>
                                 )) : []}
                             </Select>
                         </FormControl>
                         <Button
                         type="submit"
                         variant="contained"
-                        color="secondary"
+                        color="primary"
                         className={classes.submit}
-                        fullWidth
+                        size='small'
                         >
                         پیوستن
                         </Button>

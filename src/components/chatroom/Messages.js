@@ -29,17 +29,19 @@ const useStyles = makeStyles((theme) => ({
     },
     fromMe: {
         padding: theme.spacing(1),
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.dark,
+        fontSize: 14,
         color: 'white'
     },
     fromOther: {
         padding: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
+        fontSize: 14,
+        backgroundColor: theme.palette.error.main,
         color: 'white'
     },
     fromRoom: {
         padding: theme.spacing(1),
-        backgroundColor: 'black',
+        backgroundColor: theme.palette.success.dark,
         color: 'white',
     },
     typingRecord: {
@@ -122,18 +124,12 @@ const Messages = ({room, roomName, presents}) => {
     },[])
 
     useEffect(() => {
-        if(!socket) return
-        socket.on('welcome-message', (who) => {
-            const time = moment().format('HH:mm').toString()
-            const wm = { 
-                welcome: true,
-                who,
-                time 
-            }
-            socket.emit('send-message', wm)
-        })
-        return () => socket.off('welcome-message')
-    })
+        let im = chatrooms.find(ch => ch.room === room)['messages']
+        if(!_.isEqual(im, messages) && im){
+            setMessages(im)
+        } 
+    } , [chatrooms])
+
 
 
     useEffect(() => {
@@ -141,7 +137,6 @@ const Messages = ({room, roomName, presents}) => {
         socket.on('receive-message', (msg) => {
             const lsm = messages[messages.length - 1]
             if(lsm === msg && lsm.welcome){
-                console.log('her')
                 return
             }
             setMessages([...messages, msg])

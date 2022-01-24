@@ -9,7 +9,7 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import  Snackbar  from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { WhatsApp } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.success.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -130,10 +130,10 @@ export default function Login() {
           <CssBaseline />
           <div className={classes.paper}>
             <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
+              <WhatsApp />
             </Avatar>
-            <Typography component="h1" variant="h5">
-              ورود
+            <Typography component="h1" variant="h6">
+              ورود چت روم
             </Typography>
             <form className={classes.form} noValidate onSubmit={sendLogin}>
               <TextField
@@ -148,6 +148,14 @@ export default function Login() {
                 autoComplete="username"
                 autoFocus
                 onChange = {(e) => setUsername(e.target.value)}
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
               />
               <TextField
                 variant="outlined"
@@ -161,11 +169,20 @@ export default function Login() {
                 id="password"
                 autoComplete="current-password"
                 onChange = {(e) => setPassword(e.target.value)}
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
               />
               <FormControlLabel
                 control={<Checkbox value="rememberMe" color="primary" 
                             checked={rememberMe}
-                            onChange={(e) => setRememberMe(e.target.checked)} />}
+                            onChange={(e) => setRememberMe(e.target.checked)} 
+                            />}
                 label="مرا به خاطر بسپار"
               />
             
@@ -173,20 +190,20 @@ export default function Login() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
+                color="default"
                 className={classes.submit}
               >
                 ورود
               </Button>
               <Grid container justify='space-between'>
                 <Grid item >
-                  <Link href="#" variant="body2">
+                  {/* <Link href="#" variant="body2">
                     رمز عبور را فراموش کرده‌اید؟‌
-                  </Link>
+                  </Link> */}
                 </Grid>
                 <Grid item>
                   <RouterLink to='/register'>
-                    "حساب کاربری ندارید؟ ثبت نام کنید"
+                    حساب کاربری ندارید؟ ثبت نام کنید
                   </RouterLink>
                 </Grid>
               </Grid>

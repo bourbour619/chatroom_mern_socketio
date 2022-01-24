@@ -6,8 +6,12 @@ import { useUser } from '../../contexts/UserContext'
 
 const useStyles = makeStyles((theme) => ({
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '20vw', // Fix IE 11 issue.
         marginTop: theme.spacing(1),
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
       },
       submit: {
         margin: theme.spacing(3, 0, 2),
@@ -34,6 +38,14 @@ const Profile = () => {
                 autoComplete="username"
                 autoFocus
                 value={user.username}
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
               />
               <TextField
                 variant="outlined"
@@ -46,6 +58,14 @@ const Profile = () => {
                 autoComplete="who"
                 autoFocus
                 value={user.who}
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
               />
               <TextField
                 variant="outlined"
@@ -57,6 +77,14 @@ const Profile = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
               />
               <TextField
                 variant="outlined"
@@ -68,13 +96,21 @@ const Profile = () => {
                 type="password"
                 id="password2"
                 autoComplete="current-password"
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
               />
               <Button
                 type="submit"
-                fullWidth
                 variant="contained"
-                color="primary"
+                color="default"
                 className={classes.submit}
+                size="small"
               >
                 ذخیره
               </Button>

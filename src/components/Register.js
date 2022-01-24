@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import  Snackbar  from '@material-ui/core/Snackbar'
 import MuiAlert from '@material-ui/lab/Alert'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { WhatsApp } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.success.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -109,11 +109,11 @@ export default function Register() {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+        <Avatar className={classes.avatar} >
+          <WhatsApp />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          ثبت نام
+        <Typography component="h1" variant="h6">
+          عضویت چت روم شرکت نواندیشان
         </Typography>
         <form className={classes.form} noValidate onSubmit={sendRegister}>
           <Grid container spacing={2}>
@@ -125,6 +125,14 @@ export default function Register() {
                 required
                 fullWidth
                 id="username"
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
                 label="نام کاربری"
                 autoFocus
                 onChange= {(e) => setUsername(e.target.value)}
@@ -140,6 +148,14 @@ export default function Register() {
                 name="email"
                 autoComplete="email"
                 onChange= {(e) => setEmail(e.target.value)}
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -152,6 +168,14 @@ export default function Register() {
                 name="who"
                 autoComplete="who"
                 onChange= {(e) => setWho(e.target.value)}
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -165,6 +189,14 @@ export default function Register() {
                 id="password"
                 autoComplete="current-password"
                 onChange= {(e) => setPassword(e.target.value)}
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -178,6 +210,14 @@ export default function Register() {
                 id="password2"
                 autoComplete="current-password"
                 onChange= {(e) => setPasswod2(e.target.value)}
+                inputProps={{ style: {
+                  fontSize: 14
+                }}}
+                InputLabelProps={{
+                  style: {
+                    fontSize: 14
+                  }
+                }}
                 />
               </Grid>
           </Grid>
@@ -185,7 +225,7 @@ export default function Register() {
             type="submit"
             fullWidth
             variant="contained"
-            color="primary"
+            color="default"
             className={classes.submit}
           >
             ثبت نام

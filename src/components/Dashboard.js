@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: '100vw',
     },
     avatar: {
-        color: theme.palette.secondary.light
+        color: theme.palette.primary.main
     },
     componentWrapper: {
         marginTop: theme.spacing(10),
