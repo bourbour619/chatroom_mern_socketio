@@ -1,5 +1,5 @@
 {
-  "name": "naa_chatroom_reactjs",
+  "name": "chatroom_mern_socketio",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

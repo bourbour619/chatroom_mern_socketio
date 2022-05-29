@@ -113,7 +113,7 @@ export default function Register() {
           <WhatsApp />
         </Avatar>
         <Typography component="h1" variant="h6">
-          عضویت چت روم شرکت نواندیشان
+          عضویت چت روم
         </Typography>
         <form className={classes.form} noValidate onSubmit={sendRegister}>
           <Grid container spacing={2}>

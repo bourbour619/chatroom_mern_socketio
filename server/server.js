@@ -20,9 +20,9 @@ db.authenticate()
     })
     .catch(err => console.log('Db error: ' + err))
 
-// db.sync({ force: true })
-//     .then(() => console.log('Postgres db has synced ...'))
-//     .catch(err => console.log('Sync error: ' + err))
+db.sync({ force: true })
+    .then(() => console.log('Postgres db has synced ...'))
+    .catch(err => console.log('Sync error: ' + err))
 
 const authRouter = require('./routes/auth')
 app.use('/api/v1/auth', authRouter)
